@@ -1,4 +1,5 @@
 import React from "react";
+import tz_lookup from "tz-lookup";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import { format as timeAgo } from "timeago.js";
 import { Watch, MapPin, Navigation, Layers } from "react-feather";
@@ -19,6 +20,7 @@ import {
   Stack,
   AspectRatioBox,
   StatGroup,
+  Tooltip,
 } from "@chakra-ui/core";
 
 import { useSpaceX } from "../utils/use-space-x";
@@ -114,6 +116,7 @@ function Header({ launch }) {
 }
 
 function TimeAndLocation({ launch }) {
+  const { data: launchPad } = useSpaceX(`/launchPads/${launch.launch_site.site_id}`);
   return (
     <SimpleGrid columns={[1, 1, 2]} borderWidth="1px" p="4" borderRadius="md">
       <Stat>
@@ -124,7 +127,12 @@ function TimeAndLocation({ launch }) {
           </Box>
         </StatLabel>
         <StatNumber fontSize={["md", "xl"]}>
-          {formatDateTime(launch.launch_date_local)}
+          <Tooltip label={"Your timezone: " + formatDateTime(launch.launch_date_local)}>
+            {launchPad?.location?.latitude
+              ? formatDateTime(launch.launch_date_local, tz_lookup(launchPad.location.latitude, launchPad.location.longitude))
+              : <Text>Fetching date <Spinner /> </Text>
+            }
+          </Tooltip>
         </StatNumber>
         <StatHelpText>{timeAgo(launch.launch_date_utc)}</StatHelpText>
       </Stat>

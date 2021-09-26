@@ -12,6 +12,7 @@
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
     "emotion-theming": "^10.0.27",
+    "history": "^5.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
@@ -19,12 +20,13 @@
     "react-router-dom": "^6.0.0-alpha.3",
     "react-scripts": "3.4.3",
     "swr": "^0.3.0",
-    "timeago.js": "^4.0.2"
+    "timeago.js": "^4.0.2",
+    "tz-lookup": "^6.1.25"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test --watchAll=false"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,5 +42,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "jest": "24.9.0"
   }
 }
