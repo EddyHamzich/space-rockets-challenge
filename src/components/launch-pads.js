@@ -1,11 +1,14 @@
-import React from "react";
-import { Badge, Box, SimpleGrid, Text } from "@chakra-ui/core";
+import React, { useContext } from "react";
+import { UserContext } from "./user-context"
+import { Button, Badge, Box, SimpleGrid, Text } from "@chakra-ui/core";
+import { Heart } from 'react-feather';
 import { Link } from "react-router-dom";
 
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
 import { useSpaceXPaginated } from "../utils/use-space-x";
+import { useFavorite } from "../utils/use-favorite";
 
 const PAGE_SIZE = 12;
 
@@ -19,17 +22,14 @@ export default function LaunchPads() {
 
   return (
     <div>
-      <Breadcrumbs
-        items={[{ label: "Home", to: "/" }, { label: "Launch Pads" }]}
-      />
+      <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Launch Pads" }]} />
       <SimpleGrid m={[2, null, 6]} minChildWidth="350px" spacing="4">
         {error && <Error />}
-        {data &&
-          data
-            .flat()
-            .map((launchPad) => (
-              <LaunchPadItem key={launchPad.site_id} launchPad={launchPad} />
-            ))}
+        {data && data
+          .flat()
+          .map((launchPad) => (
+            <LaunchPadItem key={launchPad.site_id} launchPad={launchPad} />
+          ))}
       </SimpleGrid>
       <LoadMoreButton
         loadMore={() => setSize(size + 1)}
@@ -41,7 +41,11 @@ export default function LaunchPads() {
   );
 }
 
-function LaunchPadItem({ launchPad }) {
+export function LaunchPadItem({ launchPad, inDrawer }) {
+  const { userContext } = useContext(UserContext);
+  const isFavorite = userContext.favoriteLaunchPads.some(x => launchPad.id === x.id);
+  const { favoriteOnClick, unfavoriteOnClick } = useFavorite();
+
   return (
     <Box
       as={Link}
@@ -52,7 +56,7 @@ function LaunchPadItem({ launchPad }) {
       overflow="hidden"
       position="relative"
     >
-      <Box p="6">
+      <Box p={inDrawer ? 0 : 6}>
         <Box d="flex" alignItems="baseline">
           {launchPad.status === "active" ? (
             <Badge px="2" variant="solid" variantColor="green">
@@ -75,7 +79,6 @@ function LaunchPadItem({ launchPad }) {
             {launchPad.successful_launches} succeeded
           </Box>
         </Box>
-
         <Box
           mt="1"
           fontWeight="semibold"
@@ -88,6 +91,14 @@ function LaunchPadItem({ launchPad }) {
         <Text color="gray.500" fontSize="sm">
           {launchPad.vehicles_launched.join(", ")}
         </Text>
+        {isFavorite
+          ? <Button onClick={(e) => unfavoriteOnClick(e, "LaunchPads", launchPad)} marginTop="8px" variantColor="teal">
+              <Heart/>
+            </Button>
+          : <Button onClick={(e) => favoriteOnClick(e, "LaunchPads", launchPad)} marginTop="8px">
+              <Heart/>
+            </Button>
+        }
       </Box>
     </Box>
   );

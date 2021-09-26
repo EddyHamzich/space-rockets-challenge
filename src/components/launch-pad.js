@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "./user-context";
 import { useParams } from "react-router-dom";
-import { MapPin, Navigation } from "react-feather";
+import { Heart, MapPin, Navigation } from "react-feather";
 import {
+  Button,
   Flex,
   Heading,
   Badge,
@@ -21,6 +23,7 @@ import { useSpaceX } from "../utils/use-space-x";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import { LaunchItem } from "./launches";
+import { useFavorite } from "../utils/use-favorite";
 
 export default function LaunchPad() {
   let { launchPadId } = useParams();
@@ -68,6 +71,10 @@ const randomColor = (start = 200, end = 250) =>
   `hsl(${start + end * Math.random()}, 80%, 90%)`;
 
 function Header({ launchPad }) {
+  const { userContext } = useContext(UserContext);
+  const isFavorite = userContext.favoriteLaunchPads.some(x => launchPad.id === x.id);
+  const { favoriteOnClick, unfavoriteOnClick } = useFavorite();
+
   return (
     <Flex
       background={`linear-gradient(${randomColor()}, ${randomColor()})`}
@@ -89,7 +96,15 @@ function Header({ launchPad }) {
         fontSize={["md", "3xl"]}
         borderRadius="lg"
       >
-        {launchPad.site_name_long}
+        {launchPad.site_name_long} &nbsp;
+        {isFavorite
+          ? <Button onClick={(e) => unfavoriteOnClick(e, "LaunchPads", launchPad)} marginBottom="8px" variantColor="teal">
+              <Heart/>
+            </Button>
+          : <Button onClick={(e) => favoriteOnClick(e, "LaunchPads", launchPad)} marginBottom="8px">
+              <Heart/>
+            </Button>
+        }
       </Heading>
       <Stack isInline spacing="3">
         <Badge variantColor="purple" fontSize={["sm", "md"]}>

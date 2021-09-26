@@ -1,8 +1,11 @@
-import React from "react";
-import { Badge, Box, Image, SimpleGrid, Text, Flex } from "@chakra-ui/core";
+import React, { useContext } from "react";
+import { UserContext } from "./user-context";
+import { Button, Badge, Box, Image, SimpleGrid, Text, Flex } from "@chakra-ui/core";
 import { format as timeAgo } from "timeago.js";
+import { Heart } from "react-feather";
 import { Link } from "react-router-dom";
 
+import { useFavorite } from "../utils/use-favorite";
 import { useSpaceXPaginated } from "../utils/use-space-x";
 import { formatDate } from "../utils/format-date";
 import Error from "./error";
@@ -20,20 +23,21 @@ export default function Launches() {
       sort: "launch_date_utc",
     }
   );
-  console.log(data, error);
+
   return (
     <div>
-      <Breadcrumbs
-        items={[{ label: "Home", to: "/" }, { label: "Launches" }]}
-      />
+      <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Launches" }]} />
       <SimpleGrid m={[2, null, 6]} minChildWidth="350px" spacing="4">
         {error && <Error />}
-        {data &&
-          data
-            .flat()
-            .map((launch) => (
-              <LaunchItem launch={launch} key={launch.flight_number} />
-            ))}
+        {data && data
+          .flat()
+          .map((launch) => (
+            <LaunchItem
+              launch={launch}
+              key={launch.flight_number}
+              inDrawer={false}
+            />
+          ))}
       </SimpleGrid>
       <LoadMoreButton
         loadMore={() => setSize(size + 1)}
@@ -45,40 +49,46 @@ export default function Launches() {
   );
 }
 
-export function LaunchItem({ launch }) {
+export function LaunchItem({ launch, inDrawer }) {
+  const { userContext } = useContext(UserContext);
+  const isFavorite = userContext.favoriteLaunches.some(x => launch.flight_number === x.flight_number);
+  const { favoriteOnClick, unfavoriteOnClick } = useFavorite();
+
   return (
     <Box
       as={Link}
-      to={`/launches/${launch.flight_number.toString()}`}
+      to={`/launches/${launch.flight_number}`}
       boxShadow="md"
       borderWidth="1px"
       rounded="lg"
       overflow="hidden"
       position="relative"
     >
-      <Image
-        src={
-          launch.links.flickr_images[0]?.replace("_o.jpg", "_z.jpg") ??
-          launch.links.mission_patch_small
-        }
-        alt={`${launch.mission_name} launch`}
-        height={["200px", null, "300px"]}
-        width="100%"
-        objectFit="cover"
-        objectPosition="bottom"
-      />
-
-      <Image
-        position="absolute"
-        top="5"
-        right="5"
-        src={launch.links.mission_patch_small}
-        height="75px"
-        objectFit="contain"
-        objectPosition="bottom"
-      />
-
-      <Box p="6">
+      {!inDrawer && 
+        <Image
+          src={
+            launch.links.flickr_images[0]?.replace("_o.jpg", "_z.jpg") ??
+            launch.links.mission_patch_small
+          }
+          alt={`${launch.mission_name} launch`}
+          height={["200px", null, "300px"]}
+          width="100%"
+          objectFit="cover"
+          objectPosition="bottom"
+        />
+      }
+      {!inDrawer && 
+        <Image
+          position="absolute"
+          top="5"
+          right="5"
+          src={launch.links.mission_patch_small}
+          height="75px"
+          objectFit="contain"
+          objectPosition="bottom"
+        />
+      }
+      <Box p={inDrawer ? 0 : 6}>
         <Box d="flex" alignItems="baseline">
           {launch.launch_success ? (
             <Badge px="2" variant="solid" variantColor="green">
@@ -116,6 +126,14 @@ export function LaunchItem({ launch }) {
             {timeAgo(launch.launch_date_utc)}
           </Text>
         </Flex>
+        {isFavorite
+          ? <Button onClick={(e) => unfavoriteOnClick(e, "Launches", launch)} marginTop="8px" variantColor="teal">
+              <Heart/>
+            </Button>
+          : <Button onClick={(e) => favoriteOnClick(e, "Launches", launch)} marginTop="8px">
+              <Heart/>
+            </Button>
+        }
       </Box>
     </Box>
   );
