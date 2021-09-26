@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "./user-context";
 import tz_lookup from "tz-lookup";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import { format as timeAgo } from "timeago.js";
-import { Watch, MapPin, Navigation, Layers } from "react-feather";
+import { Heart, Watch, MapPin, Navigation, Layers } from "react-feather";
 import {
   Flex,
   Heading,
@@ -21,8 +22,10 @@ import {
   AspectRatioBox,
   StatGroup,
   Tooltip,
+  Button,
 } from "@chakra-ui/core";
 
+import { useFavorite } from "../utils/use-favorite";
 import { useSpaceX } from "../utils/use-space-x";
 import { formatDateTime } from "../utils/format-date";
 import Error from "./error";
@@ -65,6 +68,10 @@ export default function Launch() {
 }
 
 function Header({ launch }) {
+  const { userContext } = useContext(UserContext);
+  const isFavorite = userContext.favoriteLaunches.some(x => launch.flight_number === x.flight_number);
+  const { favoriteOnClick, unfavoriteOnClick } = useFavorite();
+
   return (
     <Flex
       bgImage={`url(${launch.links.flickr_images[0]})`}
@@ -95,7 +102,15 @@ function Header({ launch }) {
         py="2"
         borderRadius="lg"
       >
-        {launch.mission_name}
+        {launch.mission_name} &nbsp;
+        {isFavorite
+          ? <Button onClick={(e) => unfavoriteOnClick(e, "Launches", launch)} marginBottom="8px" variantColor="teal">
+              <Heart/>
+            </Button>
+          : <Button onClick={(e) => favoriteOnClick(e, "Launches", launch)} marginBottom="8px">
+              <Heart/>
+            </Button>
+        }
       </Heading>
       <Stack isInline spacing="3">
         <Badge variantColor="purple" fontSize={["xs", "md"]}>
