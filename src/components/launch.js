@@ -33,7 +33,7 @@ import FavoriteButton from "./favorite-button";
 
 export default function Launch() {
   let { launchId } = useParams();
-  const { data: launch, error } = useSpaceX(`/launches/${launchId}`);
+  const { data: launch, error } = useSpaceX(`v3/launches/${launchId}`);
 
   if (error) return <Error />;
   if (!launch) {
@@ -128,7 +128,7 @@ function Header({ launch }) {
 }
 
 function TimeAndLocation({ launch }) {
-  const { data: launchPad } = useSpaceX(`/launchPads/${launch.launch_site.site_id}`);
+  const { data: launchPad } = useSpaceX(`v3/launchPads/${launch.launch_site.site_id}`);
   return (
     <SimpleGrid columns={[1, 1, 2]} borderWidth="1px" p="4" borderRadius="md">
       <Stat>

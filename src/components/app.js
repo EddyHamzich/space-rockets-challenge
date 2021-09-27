@@ -7,13 +7,15 @@ import Launch from "./launch";
 import Home from "./home";
 import LaunchPads from "./launch-pads";
 import LaunchPad from "./launch-pad";
+import Rockets from "./rockets";
 import Favorites from "./favorites";
 import { UserContext } from "./user-context";
 
 export default function App() {
   const [userContext, setUserContext] = useState({
     favoriteLaunches: JSON.parse(localStorage.getItem("favoriteLaunches") || "[]"),
-    favoriteLaunchPads: JSON.parse(localStorage.getItem("favoriteLaunchPads") || "[]")
+    favoriteLaunchPads: JSON.parse(localStorage.getItem("favoriteLaunchPads") || "[]"),
+    favoriteRockets: JSON.parse(localStorage.getItem("favoriteRockets") || "[]")
   })
 
   return (
@@ -26,6 +28,7 @@ export default function App() {
           <Route path="/launches/:launchId" element={<Launch />} />
           <Route path="/launch-pads" element={<LaunchPads />} />
           <Route path="/launch-pads/:launchPadId" element={<LaunchPad />} />
+          <Route path="/rockets" element={<Rockets />} />
         </Routes>
       </UserContext.Provider>
     </div>

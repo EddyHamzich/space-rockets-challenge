@@ -14,7 +14,7 @@ const PAGE_SIZE = 12;
 
 export default function LaunchPads() {
   const { data, error, isValidating, size, setSize } = useSpaceXPaginated(
-    "/launchpads",
+    "v3/launchpads",
     {
       limit: PAGE_SIZE,
     }
@@ -51,7 +51,7 @@ export function LaunchPadItem({ launchPad, inDrawer }) {
       as={Link}
       to={`/launch-pads/${launchPad.site_id}`}
       boxShadow="md"
-      borderWidth="1px"
+      borderWidth={inDrawer ? "0" : "1px"}
       rounded="lg"
       overflow="hidden"
       position="relative"
