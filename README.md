@@ -8,7 +8,7 @@
 
 ## Task 2 PR: https://github.com/EddyHamzich/space-rockets-challenge/pull/2
 
-## Task 3 PR: https://github.com/EddyHamzich/space-rockets-challenge/pull/3
+## Task 3 PR: https://github.com/EddyHamzich/space-rockets-challenge/pull/4
 
 ## All in all I've enjoyed this little assignement and discovered a cool library (Chakra UI).
 
