@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { UserContext } from "./user-context";
 import { useParams } from "react-router-dom";
-import { Heart, MapPin, Navigation } from "react-feather";
+import { MapPin, Navigation } from "react-feather";
 import {
-  Button,
   Flex,
   Heading,
   Badge,
@@ -24,6 +23,7 @@ import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import { LaunchItem } from "./launches";
 import { useFavorite } from "../utils/use-favorite";
+import FavoriteButton from "./favorite-button";
 
 export default function LaunchPad() {
   let { launchPadId } = useParams();
@@ -97,14 +97,11 @@ function Header({ launchPad }) {
         borderRadius="lg"
       >
         {launchPad.site_name_long} &nbsp;
-        {isFavorite
-          ? <Button onClick={(e) => unfavoriteOnClick(e, "LaunchPads", launchPad)} marginBottom="8px" variantColor="teal">
-              <Heart/>
-            </Button>
-          : <Button onClick={(e) => favoriteOnClick(e, "LaunchPads", launchPad)} marginBottom="8px">
-              <Heart/>
-            </Button>
-        }
+        <FavoriteButton
+          isFavorite={isFavorite}
+          unfavoriteOnClick={(e) => unfavoriteOnClick(e, "LaunchPads", launchPad)}
+          favoriteOnClick={(e) => favoriteOnClick(e, "LaunchPads", launchPad)}
+        />
       </Heading>
       <Stack isInline spacing="3">
         <Badge variantColor="purple" fontSize={["sm", "md"]}>

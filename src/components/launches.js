@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { UserContext } from "./user-context";
-import { Button, Badge, Box, Image, SimpleGrid, Text, Flex } from "@chakra-ui/core";
+import { Badge, Box, Image, SimpleGrid, Text, Flex } from "@chakra-ui/core";
 import { format as timeAgo } from "timeago.js";
-import { Heart } from "react-feather";
 import { Link } from "react-router-dom";
 
 import { useFavorite } from "../utils/use-favorite";
@@ -11,6 +10,7 @@ import { formatDate } from "../utils/format-date";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
+import FavoriteButton from "./favorite-button";
 
 const PAGE_SIZE = 12;
 
@@ -120,20 +120,17 @@ export function LaunchItem({ launch, inDrawer }) {
         >
           {launch.mission_name}
         </Box>
-        <Flex>
+        <Flex marginBottom="8px">
           <Text fontSize="sm">{formatDate(launch.launch_date_utc)} </Text>
           <Text color="gray.500" ml="2" fontSize="sm">
             {timeAgo(launch.launch_date_utc)}
           </Text>
         </Flex>
-        {isFavorite
-          ? <Button onClick={(e) => unfavoriteOnClick(e, "Launches", launch)} marginTop="8px" variantColor="teal">
-              <Heart/>
-            </Button>
-          : <Button onClick={(e) => favoriteOnClick(e, "Launches", launch)} marginTop="8px">
-              <Heart/>
-            </Button>
-        }
+        <FavoriteButton
+          isFavorite={isFavorite}
+          unfavoriteOnClick={(e) => unfavoriteOnClick(e, "Launches", launch)}
+          favoriteOnClick={(e) => favoriteOnClick(e, "Launches", launch)}
+        />
       </Box>
     </Box>
   );
