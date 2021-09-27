@@ -1,3 +1,19 @@
+# Hi Pleo engineers 👋
+
+## I have completed all 3 tasks.
+
+## Hosted here: https://notgettingthejob.netlify.app/
+
+## Task 1 PR: https://github.com/EddyHamzich/space-rockets-challenge/pull/1
+
+## Task 2 PR: https://github.com/EddyHamzich/space-rockets-challenge/pull/2
+
+## Task 3 PR: https://github.com/EddyHamzich/space-rockets-challenge/pull/3
+
+## All in all I've enjoyed this little assignement and discovered a cool library (Chakra UI).
+
+## Things I've decided to descope: new Rockets page has a list of rockets but no rocket detail page.
+
 ![Drawing of a rocket launching with Pleo logo on the side](https://repository-images.githubusercontent.com/255552950/c9991080-ff11-11ea-8706-5d40322f68fe)
 
 # ¡Space·Rockets! app
