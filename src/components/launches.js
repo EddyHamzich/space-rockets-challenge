@@ -88,7 +88,7 @@ export function LaunchItem({ launch, inDrawer }) {
           objectPosition="bottom"
         />
       }
-      <Box p={inDrawer ? 0 : 6}>
+      <Box p={inDrawer ? 1 : 6}>
         <Box d="flex" alignItems="baseline">
           {launch.launch_success ? (
             <Badge px="2" variant="solid" variantColor="green">
