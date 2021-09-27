@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { UserContext } from "./user-context";
 import { Badge, Box, Image, SimpleGrid, Text, Flex } from "@chakra-ui/core";
 import { format as timeAgo } from "timeago.js";
-import { Link } from "react-router-dom";
 
 import { useFavorite } from "../utils/use-favorite";
 import { useSpaceXPaginated } from "../utils/use-space-x";
@@ -14,27 +13,25 @@ import FavoriteButton from "./favorite-button";
 
 const PAGE_SIZE = 12;
 
-export default function Launches() {
+export default function Rockets() {
   const { data, error, isValidating, setSize, size } = useSpaceXPaginated(
-    "v3/launches/past",
+    "v4/rockets",
     {
       limit: PAGE_SIZE,
-      order: "desc",
-      sort: "launch_date_utc",
     }
   );
 
   return (
     <div>
-      <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Launches" }]} />
+      <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Rockets" }]} />
       <SimpleGrid m={[2, null, 6]} minChildWidth="350px" spacing="4">
         {error && <Error />}
         {data && data
           .flat()
-          .map((launch) => (
-            <LaunchItem
-              launch={launch}
-              key={launch.flight_number}
+          .map((rocket) => (
+            <RocketItem
+              rocket={rocket}
+              key={rocket.id}
               inDrawer={false}
             />
           ))}
@@ -49,16 +46,14 @@ export default function Launches() {
   );
 }
 
-export function LaunchItem({ launch, inDrawer }) {
+export function RocketItem({ rocket, inDrawer }) {
   const { userContext } = useContext(UserContext);
-  const isFavorite = userContext.favoriteLaunches.some(x => launch.flight_number === x.flight_number);
+  const isFavorite = userContext.favoriteRockets.some(x => rocket.id === x.id);
   const { favoriteOnClick, unfavoriteOnClick } = useFavorite();
 
   return (
     <Box
-      as={Link}
-      to={`/launches/${launch.flight_number}`}
-      boxShadow="md"
+      boxShadow={inDrawer ? "none" : "md"}
       borderWidth={inDrawer ? "0" : "1px"}
       rounded="lg"
       overflow="hidden"
@@ -67,69 +62,41 @@ export function LaunchItem({ launch, inDrawer }) {
       {!inDrawer && 
         <Image
           src={
-            launch.links.flickr_images[0]?.replace("_o.jpg", "_z.jpg") ??
-            launch.links.mission_patch_small
+            rocket.flickr_images[1]?.replace("_o.jpg", "_z.jpg")
           }
-          alt={`${launch.mission_name} launch`}
+          alt={`${rocket.mission_name} rocket`}
           height={["200px", null, "300px"]}
           width="100%"
           objectFit="cover"
           objectPosition="bottom"
         />
       }
-      {!inDrawer && 
-        <Image
-          position="absolute"
-          top="5"
-          right="5"
-          src={launch.links.mission_patch_small}
-          height="75px"
-          objectFit="contain"
-          objectPosition="bottom"
-        />
-      }
-      <Box p={inDrawer ? 0 : 6}>
+      <Box p={inDrawer ? 1 : 6}>
         <Box d="flex" alignItems="baseline">
-          {launch.launch_success ? (
-            <Badge px="2" variant="solid" variantColor="green">
-              Successful
-            </Badge>
-          ) : (
-            <Badge px="2" variant="solid" variantColor="red">
-              Failed
-            </Badge>
-          )}
           <Box
             color="gray.500"
             fontWeight="semibold"
             letterSpacing="wide"
-            fontSize="xs"
+            fontSize="xl"
             textTransform="uppercase"
-            ml="2"
           >
-            {launch.rocket.rocket_name} &bull; {launch.launch_site.site_name}
+            <Badge fontSize="xl">{rocket.name}</Badge>
+            <br/> 
+            <Text fontSize="xl">${rocket.cost_per_launch.toLocaleString()}</Text>
           </Box>
         </Box>
-
-        <Box
-          mt="1"
-          fontWeight="semibold"
-          as="h4"
-          lineHeight="tight"
-          isTruncated
-        >
-          {launch.mission_name}
-        </Box>
         <Flex marginBottom="8px">
-          <Text fontSize="sm">{formatDate(launch.launch_date_utc)} </Text>
+          <Text fontSize="sm">
+            First Flight: {formatDate(rocket.first_flight)}
+          </Text>
           <Text color="gray.500" ml="2" fontSize="sm">
-            {timeAgo(launch.launch_date_utc)}
+            {timeAgo(rocket.first_flight)}
           </Text>
         </Flex>
         <FavoriteButton
           isFavorite={isFavorite}
-          unfavoriteOnClick={(e) => unfavoriteOnClick(e, "Launches", launch)}
-          favoriteOnClick={(e) => favoriteOnClick(e, "Launches", launch)}
+          unfavoriteOnClick={(e) => unfavoriteOnClick(e, "Rockets", rocket)}
+          favoriteOnClick={(e) => favoriteOnClick(e, "Rockets", rocket)}
         />
       </Box>
     </Box>

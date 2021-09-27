@@ -27,9 +27,9 @@ import FavoriteButton from "./favorite-button";
 
 export default function LaunchPad() {
   let { launchPadId } = useParams();
-  const { data: launchPad, error } = useSpaceX(`/launchpads/${launchPadId}`);
+  const { data: launchPad, error } = useSpaceX(`v3/launchpads/${launchPadId}`);
 
-  const { data: launches } = useSpaceX(launchPad ? "/launches/past" : null, {
+  const { data: launches } = useSpaceX(launchPad ? "v3/launches/past" : null, {
     limit: 3,
     order: "desc",
     sort: "launch_date_utc",
