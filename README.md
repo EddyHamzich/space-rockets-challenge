@@ -14,6 +14,8 @@
 
 ## Things I've decided to descope: new Rockets page has a list of rockets but no rocket detail page.
 
+## Things I would do if I spent more time on this (my personal limit was 4 hours): Add TS, add more tests, improve folder structure.
+
 ![Drawing of a rocket launching with Pleo logo on the side](https://repository-images.githubusercontent.com/255552950/c9991080-ff11-11ea-8706-5d40322f68fe)
 
 # ¡Space·Rockets! app
