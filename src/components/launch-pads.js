@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { UserContext } from "./user-context"
-import { Button, Badge, Box, SimpleGrid, Text } from "@chakra-ui/core";
-import { Heart } from 'react-feather';
+import { Badge, Box, SimpleGrid, Text } from "@chakra-ui/core";
 import { Link } from "react-router-dom";
 
 import Error from "./error";
@@ -9,6 +8,7 @@ import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
 import { useSpaceXPaginated } from "../utils/use-space-x";
 import { useFavorite } from "../utils/use-favorite";
+import FavoriteButton from "./favorite-button";
 
 const PAGE_SIZE = 12;
 
@@ -88,17 +88,14 @@ export function LaunchPadItem({ launchPad, inDrawer }) {
         >
           {launchPad.name}
         </Box>
-        <Text color="gray.500" fontSize="sm">
+        <Text color="gray.500" fontSize="sm" marginBottom="8px">
           {launchPad.vehicles_launched.join(", ")}
         </Text>
-        {isFavorite
-          ? <Button onClick={(e) => unfavoriteOnClick(e, "LaunchPads", launchPad)} marginTop="8px" variantColor="teal">
-              <Heart/>
-            </Button>
-          : <Button onClick={(e) => favoriteOnClick(e, "LaunchPads", launchPad)} marginTop="8px">
-              <Heart/>
-            </Button>
-        }
+        <FavoriteButton
+          isFavorite={isFavorite}
+          unfavoriteOnClick={(e) => unfavoriteOnClick(e, "LaunchPads", launchPad)}
+          favoriteOnClick={(e) => favoriteOnClick(e, "LaunchPads", launchPad)}
+        />
       </Box>
     </Box>
   );
