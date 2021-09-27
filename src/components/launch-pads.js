@@ -56,7 +56,7 @@ export function LaunchPadItem({ launchPad, inDrawer }) {
       overflow="hidden"
       position="relative"
     >
-      <Box p={inDrawer ? 0 : 6}>
+      <Box p={inDrawer ? 1 : 6}>
         <Box d="flex" alignItems="baseline">
           {launchPad.status === "active" ? (
             <Badge px="2" variant="solid" variantColor="green">
