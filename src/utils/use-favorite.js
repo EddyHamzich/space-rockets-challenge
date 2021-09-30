@@ -6,7 +6,7 @@ export const useFavorite = () => {
     
   // type itemType = ("Launches" | "LaunchPads" | "Rockets")
 
-  const syncStorageWithContext = (itemType) => {
+  const syncContextWithStorage = (itemType) => {
     let newContext = { ...userContext };
     newContext["favorite" + itemType] = JSON.parse(localStorage.getItem("favorite" + itemType));
     setUserContext(newContext);
@@ -20,7 +20,7 @@ export const useFavorite = () => {
     current.push(item);
 
     localStorage.setItem("favorite" + itemType, JSON.stringify(current));
-    syncStorageWithContext(itemType);
+    syncContextWithStorage(itemType);
   }
 
   const unfavoriteOnClick = (e, itemType, item) => {
@@ -35,7 +35,7 @@ export const useFavorite = () => {
     });
 
     localStorage.setItem("favorite" + itemType, JSON.stringify(current));
-    syncStorageWithContext(itemType);
+    syncContextWithStorage(itemType);
   }
 
   return { favoriteOnClick, unfavoriteOnClick } 
