@@ -6,58 +6,36 @@ export const useFavorite = () => {
     
   // type itemType = ("Launches" | "LaunchPads" | "Rockets")
 
+  const syncStorageWithContext = (itemType) => {
+    let newContext = { ...userContext };
+    newContext["favorite" + itemType] = JSON.parse(localStorage.getItem("favorite" + itemType));
+    setUserContext(newContext);
+  }
+
   const favoriteOnClick = (e, itemType, item) => {
     e.stopPropagation();
     e.preventDefault();
 
-    if(itemType === "Launches") { 
-      let current = JSON.parse(localStorage.getItem("favoriteLaunches") || "[]");
-      current.push(item);
+    let current = JSON.parse(localStorage.getItem("favorite" + itemType) || "[]");
+    current.push(item);
 
-      localStorage.setItem("favoriteLaunches", JSON.stringify(current));
-      setUserContext({ ...userContext, favoriteLaunches: JSON.parse(localStorage.getItem("favoriteLaunches")) })
-    }
-    else if(itemType === "LaunchPads") { 
-      let current = JSON.parse(localStorage.getItem("favoriteLaunchPads") || "[]");
-      current.push(item);
-
-      localStorage.setItem("favoriteLaunchPads", JSON.stringify(current));
-      setUserContext({ ...userContext, favoriteLaunchPads: JSON.parse(localStorage.getItem("favoriteLaunchPads")) })
-    }
-    else if(itemType === "Rockets") { 
-      let current = JSON.parse(localStorage.getItem("favoriteRockets") || "[]");
-      current.push(item);
-
-      localStorage.setItem("favoriteRockets", JSON.stringify(current));
-      setUserContext({ ...userContext, favoriteRockets: JSON.parse(localStorage.getItem("favoriteRockets")) })
-    }
+    localStorage.setItem("favorite" + itemType, JSON.stringify(current));
+    syncStorageWithContext(itemType);
   }
 
   const unfavoriteOnClick = (e, itemType, item) => {
     e.stopPropagation();
     e.preventDefault();
 
-    if(itemType === "Launches") {
-      let current = JSON.parse(localStorage.getItem("favoriteLaunches") || "[]");
-      current = current.filter(x => x.flight_number !== item.flight_number);
+    let current = JSON.parse(localStorage.getItem("favorite" + itemType) || "[]");
+    current = current.filter(x => {
+      if(x.id) return x.id !== item.id;
+      if(!x.id) return x.flight_number !== item.flight_number;
+      else return x;
+    });
 
-      localStorage.setItem("favoriteLaunches", JSON.stringify(current));
-      setUserContext({ ...userContext, favoriteLaunches: JSON.parse(localStorage.getItem("favoriteLaunches")) })
-    }
-    else if(itemType === "LaunchPads") {
-      let current = JSON.parse(localStorage.getItem("favoriteLaunchPads") || "[]");
-      current = current.filter(x => x.id !== item.id);
-
-      localStorage.setItem("favoriteLaunchPads", JSON.stringify(current));
-      setUserContext({ ...userContext, favoriteLaunchPads: JSON.parse(localStorage.getItem("favoriteLaunchPads")) })
-    }
-    else if(itemType === "Rockets") { 
-      let current = JSON.parse(localStorage.getItem("favoriteRockets") || "[]");
-      current = current.filter(x => x.id !== item.id);
-
-      localStorage.setItem("favoriteRockets", JSON.stringify(current));
-      setUserContext({ ...userContext, favoriteRockets: JSON.parse(localStorage.getItem("favoriteRockets")) })
-    }
+    localStorage.setItem("favorite" + itemType, JSON.stringify(current));
+    syncStorageWithContext(itemType);
   }
 
   return { favoriteOnClick, unfavoriteOnClick } 
